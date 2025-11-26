@@ -59,9 +59,10 @@ export default function LoginPage() {
             />
           </div>
 
-          <button 
+         <button 
             type="submit" 
-            className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+            // Substituímos as classes de cor do botão Entrar:
+            className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
           >
             Entrar
           </button>
@@ -69,7 +70,8 @@ export default function LoginPage() {
         
         <p className="mt-4 text-center text-sm text-gray-600">
           Não tem uma conta? 
-          <a href="/cadastro" className="font-medium text-pink-600 hover:text-pink-500 ml-1">
+          {/* Substituímos as classes de cor do link Cadastre-se: */}
+          <a href="/cadastro" className="font-medium text-primary hover:text-primary/90 ml-1"> 
             Cadastre-se aqui
           </a>
         </p>
