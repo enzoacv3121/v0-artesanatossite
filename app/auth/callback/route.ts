@@ -21,3 +21,6 @@ export async function GET(request: Request) {
 
     return NextResponse.redirect(`${origin}/login?error=true`);
 }
+
+
+// Forcando atualizacao do Vercel
