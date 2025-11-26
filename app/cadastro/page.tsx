@@ -1,11 +1,12 @@
 // app/cadastro/page.tsx
 
-import { supabaseServer } from "@/lib/supabase.server";
+import { createClient } from "@/lib/supabase.server"; // <--- NOVO CAMINHO CORRETO
 import { redirect } from 'next/navigation';
 
-// Esta é uma Server Action para lidar com o formulário
 async function signUp(formData: FormData) {
-  'use server';
+  'use server';
+  
+  const supabase = createClient(); // <-- CRIA A INSTÂNCIA AQUI
 
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
@@ -13,7 +14,7 @@ async function signUp(formData: FormData) {
   const phone = formData.get('phone') as string; // <--- NOVO CAMPO DE TELEFONE
 
   // Chama a função de cadastro do Supabase Auth
-  const { data, error } = await supabaseServer.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {

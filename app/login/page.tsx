@@ -1,17 +1,18 @@
 // app/login/page.tsx
 
-import { supabaseServer } from "@/lib/supabase.server"; // Importa o cliente de servidor
+import { createClient } from "@/lib/supabase.server"; // <--- REMOVIDA A PASTA EXTRA 'supabase/'
 import { redirect } from 'next/navigation';
 
 // Server Action para lidar com o formulário de login
 async function signIn(formData: FormData) {
   'use server';
+    const supabase = createClient(); // <-- CRIA A INSTÂNCIA AQUI
 
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
   // Chama a função de login do Supabase Auth
-  const { error } = await supabaseServer.auth.signInWithPassword({
+  const { error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });

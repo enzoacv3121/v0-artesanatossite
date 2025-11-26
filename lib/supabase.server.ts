@@ -1,14 +1,36 @@
-// lib/supabase.server.js
+// lib/supabase.server.ts
 
-import { createClient } from '@supabase/supabase-js'
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 
-// Variáveis de ambiente carregadas do .env.local
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+// Você pode remover <Database> se não estiver usando a tipagem do Supabase
+export function createClient() {
+  const cookieStore = cookies()
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('As variáveis de ambiente do Supabase não foram carregadas. Verifique o .env.local e reinicie o servidor.')
+  return createServerClient<any>( 
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          const cookie = cookieStore.get(name);
+          return cookie ? cookie.value : undefined;
+        },
+        set(name: string, value: string, options: any) {
+          try {
+            cookieStore.set({ name, value, ...options })
+          } catch (error) {
+            // Silencia o erro
+          }
+        },
+        remove(name: string, options: any) {
+          try {
+            cookieStore.set({ name, value: '', ...options })
+          } catch (error) {
+            // Silencia o erro
+          }
+        },
+      },
+    }
+  )
 }
-
-// Cria e exporta o cliente para uso em Server Components (app/page.tsx)
-export const supabaseServer = createClient(supabaseUrl, supabaseAnonKey);
