@@ -1,11 +1,8 @@
 // app/page.tsx
+export const dynamic = 'force-dynamic'; // <--- ADICIONE ESTA LINHA
 
-// 1. IMPORTAÇÃO CORRIGIDA: Importamos a função createClient do servidor
 import { createClient } from "@/lib/supabase.server"; 
-
-// AVISO: Lembre-se de usar <HeaderWrapper /> no seu layout principal para ver o status de login!
-
-import { Header } from "@/components/header"; 
+import { HeaderWrapper } from "@/components/header-wrapper"; // <--- IMPORTA O WRAPPER
 import { HeroSection } from "@/components/hero-section";
 import { ProductsSection } from "@/components/products-section";
 import { AboutSection } from "@/components/about-section";
@@ -19,22 +16,20 @@ interface Produto {
   descricao: string;
   preco: number;
   imagem_url: string;
-  // Adicione outros campos da sua tabela produtos
 }
 
 export default async function Home() {
-  // 2. CRIA A INSTÂNCIA DO CLIENTE DE SERVIDOR CORRETA
-  const supabase = createClient(); 
+  // 2. CRIA A INSTÂNCIA DO CLIENTE DE SERVIDOR CORRETA
+  const supabase = createClient(); 
 
-  // 3. Busca os dados no Supabase usando a nova instância 'supabase'
+  // 3. Busca os dados no Supabase
   const { data: produtos, error } = await supabase
-    .from('produtos') // <-- Nome da sua tabela
-    .select('*')     // <-- Seleciona todas as colunas
-    .limit(10);      // <-- Limita para 10 itens para teste
+    .from('produtos') 
+    .select('*')     
+    .limit(10);      
 
   if (error) {
     console.error('Erro ao buscar produtos:', error.message);
-    // Em caso de erro, retorna um array vazio
     return (
       <main className="min-h-screen">
         <p>Erro ao carregar produtos. Verifique sua conexão com o banco de dados.</p>
@@ -46,10 +41,9 @@ export default async function Home() {
   // 4. Passa os dados para o ProductsSection
   return (
     <main className="min-h-screen">
-      {/* ⚠️ Lembre-se: O Header deve ser chamado via <HeaderWrapper /> no layout/page principal */}
-      <Header /> 
+      {/* USANDO O WRAPPER NO LUGAR DO HEADER DIRETO */}
+      <HeaderWrapper /> 
       <HeroSection />
-      {/* Passa os produtos como propriedade */}
       <ProductsSection produtos={produtos as Produto[]} /> 
       <AboutSection />
       <ContactSection />
