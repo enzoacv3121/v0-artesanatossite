@@ -2,79 +2,80 @@
 
 import { createClient } from "@/lib/supabase.server";
 import { redirect } from 'next/navigation';
+import Link from "next/link";
 
 // Server Action para lidar com o formulário de login
-async function signIn(formData: FormData): Promise<void> { // <--- FORÇA O RETORNO A SER VOID
-  'use server';
+async function signIn(formData: FormData) {
+  'use server';
 
   const supabase = createClient(); 
 
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
 
-  // Chama a função de login do Supabase Auth
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
+  // Chama a função de login do Supabase Auth
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
-  if (error) {
-    console.error('Erro de Login:', error.message);
-    // REMOVEMOS O RETORNO { error: '...' } para resolver o problema de tipagem.
-    return; 
-  }
-  
-  // Redireciona para a página inicial após o login
-  redirect('/'); 
+  if (error) {
+    console.error('Erro de Login:', error.message);
+    return; 
+  }
+  
+  // Redireciona para a página inicial após o login
+  redirect('/'); 
 }
 
 export default function LoginPage() {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Acesse Sua Conta</h2>
-        
-        <form action={signIn} className="space-y-4">
-          
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-            <input 
-              id="email" 
-              name="email" 
-              type="email" 
-              required 
-              placeholder="seu.email@exemplo.com"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-            />
-          </div>
-          
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Senha</label>
-            <input 
-              id="password" 
-              name="password" 
-              type="password" 
-              required 
-              placeholder="********"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-            />
-          </div>
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 font-sans">
+      <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-2 text-center text-gray-900">Acesse Sua Conta</h2>
+        <p className="text-center text-gray-500 text-sm mb-8">Bem-vindo de volta!</p>
+        
+        <form action={signIn} className="space-y-4">
+          
+          <div>
+            <label htmlFor="email" className="block text-xs font-bold text-gray-700 uppercase mb-1">Email</label>
+            <input 
+              id="email" 
+              name="email" 
+              type="email" 
+              required 
+              placeholder="seu.email@exemplo.com"
+              className="w-full border border-gray-300 p-3 text-sm rounded-sm outline-none focus:border-black transition-colors"
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="password" className="block text-xs font-bold text-gray-700 uppercase mb-1">Senha</label>
+            <input 
+              id="password" 
+              name="password" 
+              type="password" 
+              required 
+              placeholder="********"
+              className="w-full border border-gray-300 p-3 text-sm rounded-sm outline-none focus:border-black transition-colors"
+            />
+          </div>
 
-          <button 
-            type="submit" 
-            className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-          >
-            Entrar
-          </button>
-        </form>
-        
-        <p className="mt-4 text-center text-sm text-gray-600">
-          Não tem uma conta? 
-          <a href="/cadastro" className="font-medium text-primary hover:text-primary/90 ml-1"> 
-            Cadastre-se aqui
-          </a>
-        </p>
-      </div>
-    </div>
-  );
+          <button 
+            type="submit" 
+            className="w-full bg-black text-white py-3 px-4 text-sm font-bold uppercase tracking-wider hover:bg-gray-800 transition-colors rounded-sm mt-4"
+          >
+            Entrar
+          </button>
+        </form>
+        
+        <p className="mt-6 text-center text-sm text-gray-600">
+          Não tem uma conta? 
+          <Link href="/cadastro" className="font-bold text-black hover:underline ml-1"> 
+            Cadastre-se aqui
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
 }
