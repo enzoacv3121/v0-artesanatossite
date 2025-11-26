@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@/lib/supabase.server';
 import { NextResponse } from 'next/server';
 
 // VARS E CLIENTE AQUI EM CIMA (FORA DAS FUNÇÕES)

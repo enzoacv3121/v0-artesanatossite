@@ -1,10 +1,11 @@
 // components/header-wrapper.tsx
 
-import { getUserSession } from '@/lib/auth'; 
-import { Header } from './header'; 
+import { getUserSession } from '@/lib/auth';
+import { Header } from './header';
 
 // ESTE É UM SERVER COMPONENT
 export async function HeaderWrapper() {
+    
     // 1. Obtém o status do usuário no servidor
     const user = await getUserSession();
     
@@ -12,5 +13,8 @@ export async function HeaderWrapper() {
     const userLoggedIn = !!user; 
     
     // 3. Renderiza o Client Component, passando o status via props
-    return <Header userLoggedIn={userLoggedIn} />;
+    // SINTAXE LIMPA PARA EVITAR ERROS
+    return (
+        <Header userLoggedIn={userLoggedIn} />
+    );
 }

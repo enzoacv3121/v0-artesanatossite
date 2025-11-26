@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase.server"; // <--- REMOVIDA A PASTA EXTRA 'supabase/'
+import { createClient } from "@/lib/supabase.server"; // <--- CAMINHO CORRETO
 
 
 export async function getUserSession() {
