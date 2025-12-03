@@ -20,7 +20,7 @@ interface Produto {
 }
 
 export default async function ProdutoPage({ params }: { params: Promise<{ id: string }> }) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { id } = await params;
 
   const { data: produto, error } = await supabase

@@ -4,9 +4,9 @@
 import { createClient } from '@/lib/supabase.server'; 
 import { redirect } from 'next/navigation';
 
-export async function addItemToCart(formData: FormData): Promise<void> {
-    const supabase = createClient();
-    
+export async function addItemToCart(formData: FormData) {
+    const supabase = await createClient(); // <--- TEM QUE TER AWAIT
+    // ...
     // Pegamos os dados do formulário
     const produtoId = formData.get('produtoId') as string;
     // Pegamos a quantidade (se não vier, assume 1)

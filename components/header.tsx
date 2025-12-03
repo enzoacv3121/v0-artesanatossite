@@ -1,23 +1,57 @@
-// components/header.tsx
+"use client"; 
 
-"use client"
-
-import { ShoppingCart, Menu, X, User } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { ShoppingCart, Menu, X, User, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 import Link from 'next/link';
-import { signOut } from '@/actions/auth'; // <--- IMPORTAÇÃO DA NOVA SERVER ACTION
+import { signOut } from '@/actions/auth';
+import { createClient } from '@/lib/supabase.client'; // <--- IMPORTAÇÃO NOVA
 
-export function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+interface HeaderProps {
+  userLoggedIn: boolean; 
+}
+
+export function Header({ userLoggedIn: initialUserLoggedIn }: HeaderProps) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   
-  // NOTE: userLoggedIn deve ser lido de um contexto/cookie
-  // Mantenha como 'false' temporariamente para ver os botões
-  const userLoggedIn = false; 
+  // Estado local para controlar o login visualmente
+  const [isLoggedIn, setIsLoggedIn] = useState(initialUserLoggedIn);
+
+  // EFEITO MÁGICO: Verifica no navegador se o usuário está logado
+  useEffect(() => {
+    const supabase = createClient();
+    
+    // 1. Verifica a sessão atual imediatamente
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        setIsLoggedIn(true);
+      }
+    };
+    checkSession();
+
+    // 2. Escuta mudanças (login/logout) em tempo real
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' || session) {
+        setIsLoggedIn(true);
+      } else if (event === 'SIGNED_OUT') {
+        setIsLoggedIn(false);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  // Atualiza o estado se a prop do servidor mudar (sincronia)
+  useEffect(() => {
+    setIsLoggedIn(initialUserLoggedIn);
+  }, [initialUserLoggedIn]);
 
   const handleLinkClick = () => {
     setIsMenuOpen(false);
-  }
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -38,17 +72,17 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <a href="#inicio" className="text-sm font-medium hover:text-primary transition-colors">Início</a>
-            <a href="#produtos" className="text-sm font-medium hover:text-primary transition-colors">Produtos</a>
-            <a href="#sobre" className="text-sm font-medium hover:text-primary transition-colors">Sobre</a>
-            <a href="#contato" className="text-sm font-medium hover:text-primary transition-colors">Contato</a>
+            <Link href="/" className="text-sm font-medium hover:text-primary transition-colors">Início</Link>
+            <Link href="/#produtos" className="text-sm font-medium hover:text-primary transition-colors">Produtos</Link>
+            <Link href="/#sobre" className="text-sm font-medium hover:text-primary transition-colors">Sobre</Link>
+            <Link href="/#contato" className="text-sm font-medium hover:text-primary transition-colors">Contato</Link>
           </nav>
 
-          {/* Actions (Login/Cadastro, Sair e Carrinho) */}
+          {/* Actions */}
           <div className="flex items-center gap-4">
 
-            {/* BOTÕES DE AUTENTICAÇÃO */}
-            {!userLoggedIn ? (
+            {/* LÓGICA VISUAL ATUALIZADA */}
+            {!isLoggedIn ? (
               <>
                 <Link href="/login" onClick={handleLinkClick}>
                   <Button variant="ghost" className="text-sm font-medium hover:bg-muted/50 transition-colors">Entrar</Button>
@@ -58,22 +92,22 @@ export function Header() {
                 </Link>
               </>
             ) : (
-              // Botão de Sair (quando logado)
-              <form action={signOut}> {/* <--- CHAMA A AÇÃO IMPORTADA */}
-                <Button variant="ghost" size="icon" className="group">
-                  <User className="h-5 w-5 mr-2 text-foreground" />
-                  <span className="text-sm font-medium text-foreground">Sair</span>
+              <form action={async () => {
+                  await signOut();
+                  setIsLoggedIn(false); // Força atualização visual imediata ao sair
+              }}>
+                <Button variant="ghost" size="icon" className="group" type="submit">
+                  <LogOut className="h-5 w-5 mr-2 text-foreground" />
+                  <span className="sr-only">Sair</span>
                 </Button>
               </form>
             )}
 
-            {/* Carrinho de Compras */}
             <Button variant="ghost" size="icon" className="relative">
               <ShoppingCart className="h-5 w-5" />
               <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
             </Button>
 
-            {/* Mobile Menu Toggle */}
             <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
@@ -84,13 +118,10 @@ export function Header() {
         {isMenuOpen && (
           <nav className="md:hidden py-4 border-t border-border">
             <div className="flex flex-col gap-4">
-              <a href="#inicio" onClick={handleLinkClick} className="text-sm font-medium hover:text-primary transition-colors">Início</a>
-              <a href="#produtos" onClick={handleLinkClick} className="text-sm font-medium hover:text-primary transition-colors">Produtos</a>
-              <a href="#sobre" onClick={handleLinkClick} className="text-sm font-medium hover:text-primary transition-colors">Sobre</a>
-              <a href="#contato" onClick={handleLinkClick} className="text-sm font-medium hover:text-primary transition-colors">Contato</a>
+              <Link href="/" onClick={handleLinkClick} className="text-sm font-medium hover:text-primary transition-colors">Início</Link>
+              <Link href="/#produtos" onClick={handleLinkClick} className="text-sm font-medium hover:text-primary transition-colors">Produtos</Link>
               
-              {/* Links de Autenticação no Mobile */}
-              {!userLoggedIn && (
+              {!isLoggedIn && (
                 <>
                   <Link href="/login" onClick={handleLinkClick} className="text-sm font-medium hover:text-primary transition-colors">Entrar</Link>
                   <Link href="/cadastro" onClick={handleLinkClick} className="text-sm font-medium hover:text-primary transition-colors">Cadastrar</Link>

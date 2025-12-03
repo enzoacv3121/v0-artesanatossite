@@ -1,10 +1,11 @@
-import { createClient } from "@/lib/supabase.server"; // <--- CAMINHO CORRETO
+// lib/auth.ts
 
+import { createClient } from '@/lib/supabase.server'; 
 
+// TEM QUE TER O 'export' AQUI:
 export async function getUserSession() {
-    const supabase = createClient();
+    const supabase = await createClient(); // Com await, pois createClient agora é async
     
-    // Esta função lê os cookies de forma segura no servidor
     const { data: { user } } = await supabase.auth.getUser();
     
     return user; 

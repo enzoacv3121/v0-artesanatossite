@@ -1,6 +1,4 @@
 // app/auth/callback/route.ts
-
-// CORREÇÃO: Removemos a barra extra. O caminho certo é .server
 import { createClient } from '@/lib/supabase.server'; 
 import { NextResponse } from 'next/server';
 
@@ -10,7 +8,8 @@ export async function GET(request: Request) {
     const origin = requestUrl.origin; 
 
     if (code) {
-        const supabase = createClient();
+        // CORREÇÃO: Adicione 'await' aqui
+        const supabase = await createClient();
         
         const { error } = await supabase.auth.exchangeCodeForSession(code);
 
@@ -21,6 +20,3 @@ export async function GET(request: Request) {
 
     return NextResponse.redirect(`${origin}/login?error=true`);
 }
-
-
-// Forcando atualizacao do Vercel

@@ -1,9 +1,14 @@
+// app/layout.tsx
+
 import type React from "react"
 import type { Metadata } from "next"
 import { Cormorant_Garamond, Inter } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import "./globals.css"
+
+// IMPORTAÇÃO NOVA: O componente que verifica o login
+import { HeaderWrapper } from "@/components/header-wrapper"
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -30,6 +35,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`font-sans ${inter.variable} ${cormorant.variable} antialiased`}>
+        
+        {/* ADICIONADO: O Cabeçalho Global */}
+        <HeaderWrapper />
+
         <Suspense fallback={<div>Loading...</div>}>
           {children}
           <Analytics />
