@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import Link from 'next/link';
 import { signOut } from '@/actions/auth';
-import { createClient } from '@/lib/supabase.client'; // <--- IMPORTAÇÃO NOVA
+import { createClient } from '@/lib/supabase.client';
 
 interface HeaderProps {
   userLoggedIn: boolean; 
@@ -103,10 +103,15 @@ export function Header({ userLoggedIn: initialUserLoggedIn }: HeaderProps) {
               </form>
             )}
 
-            <Button variant="ghost" size="icon" className="relative">
-              <ShoppingCart className="h-5 w-5" />
-              <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
-            </Button>
+            {/* --- ALTERAÇÃO AQUI: Link para o Carrinho --- */}
+            <Link href="/carrinho">
+              <Button variant="ghost" size="icon" className="relative">
+                <ShoppingCart className="h-5 w-5" />
+                {/* Se quiser ativar o contador depois, descomente:
+                  <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span> 
+                */}
+              </Button>
+            </Link>
 
             <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

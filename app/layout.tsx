@@ -6,8 +6,6 @@ import { Cormorant_Garamond, Inter } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import "./globals.css"
-
-// IMPORTAÇÃO NOVA: O componente que verifica o login
 import { HeaderWrapper } from "@/components/header-wrapper"
 
 const cormorant = Cormorant_Garamond({
@@ -22,9 +20,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Artesanatos da Vovó - Feito à Mão com Amor",
-  description: "Descubra peças únicas de artesanato feitas à mão com carinho e dedicação",
-  generator: "v0.app",
+  title: "Artesanatos da Vovó Valdeci",
+  description: "Peças únicas feitas à mão com amor.",
 }
 
 export default function RootLayout({
@@ -34,15 +31,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`font-sans ${inter.variable} ${cormorant.variable} antialiased`}>
+      <body className={`font-sans ${inter.variable} ${cormorant.variable} antialiased min-h-screen flex flex-col bg-white text-gray-900`}>
         
-        {/* ADICIONADO: O Cabeçalho Global */}
+        {/* Cabeçalho Global */}
         <HeaderWrapper />
 
-        <Suspense fallback={<div>Loading...</div>}>
-          {children}
-          <Analytics />
-        </Suspense>
+        {/* Padding-top (pt-20) para o conteúdo não ficar atrás do header fixo */}
+        <div className="flex-grow pt-24">
+          <Suspense fallback={<div className="p-10 text-center">Carregando...</div>}>
+            {children}
+            <Analytics />
+          </Suspense>
+        </div>
+        
       </body>
     </html>
   )
