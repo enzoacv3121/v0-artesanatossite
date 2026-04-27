@@ -1,8 +1,5 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
-
 export function HeroSection() {
   return (
     <section id="inicio" className="pt-32 pb-20 px-4 lg:px-8">
@@ -19,16 +16,6 @@ export function HeroSection() {
           <p className="text-lg md:text-xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
             Cada peça é única, criada à mão com técnicas tradicionais e materiais cuidadosamente selecionados
           </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button size="lg" className="group">
-              Ver Produtos
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button size="lg" variant="outline">
-              Conhecer a História
-            </Button>
-          </div>
         </div>
       </div>
     </section>
