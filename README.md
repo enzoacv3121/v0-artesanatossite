@@ -15,6 +15,24 @@ Dimensão Técnica (Tecnologias)
 - Ícones: Lucide React
 - Linguagem: TypeScript
 
+Organização do Projeto
+
+A estrutura de ficheiros foi organizada seguindo as boas práticas do Next.js (App Router):
+
+* `app/`: Contém as rotas principais da aplicação (ex: `/carrinho`, `/checkout`, `/login`, `/produto/[id]`).
+* `actions/`: Ficheiros dedicados aos Server Actions (`auth.ts` e `cart.ts`), responsáveis pela comunicação segura com a base de dados sem expor chaves no cliente.
+* `components/`: Componentes reutilizáveis de UI (ex: Header, Footer, Cards de Produtos).
+* `lib/`: Configurações de clientes do Supabase (`supabase.server.ts` e `supabase.client.ts`).
+
+Estrutura da Base de Dados (Supabase/PostgreSQL)
+
+O sistema utiliza um modelo relacional simples e eficiente:
+
+1.  **Tabela `produtos`**: Armazena o catálogo.
+    * Colunas: `id_produtos` (PK), `nome`, `descricao`, `preco`, `imagem_url`, `categoria`, `estoque`.
+2.  **Tabela `carrinho`**: Gere os itens adicionados pelos utilizadores de forma persistente.
+    * Colunas: `id_carrinho` (PK), `usuario_id` (FK - ligado à Autenticação), `produto_id` (FK - ligado a produtos), `quantidade`.
+
 
 Como executar
 1. `npm install`
