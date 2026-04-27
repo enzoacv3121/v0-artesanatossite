@@ -1,69 +1,20 @@
 "use client"; 
 
-import { ShoppingCart, Menu, X, User, LogOut } from "lucide-react";
+import { ShoppingCart, Menu, X, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from 'next/link';
 import { signOut } from '@/actions/auth';
-import { createClient } from '@/lib/supabase.client';
 
 interface HeaderProps {
   userLoggedIn: boolean; 
+  serverCartCount?: number;
 }
 
-export function Header({ userLoggedIn: initialUserLoggedIn }: HeaderProps) {
+export function Header({ userLoggedIn, serverCartCount = 0 }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(initialUserLoggedIn);
-  const [cartCount, setCartCount] = useState(0);
 
-  useEffect(() => {
-    const supabase = createClient();
-    
-    const fetchCartCount = async (userId: string) => {
-      const { data, error } = await supabase
-        .from('carrinho')
-        .select('quantidade')
-        .eq('usuario_id', userId);
-
-      if (!error && data) {
-        const total = data.reduce((acc, item) => acc + item.quantidade, 0);
-        setCartCount(total);
-      }
-    };
-
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      // MUDANÇA: Verificação segura do TypeScript
-      if (session?.user) {
-        setIsLoggedIn(true);
-        fetchCartCount(session.user.id);
-      }
-    };
-    checkSession();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      // MUDANÇA: Verificação segura do TypeScript
-      if (session?.user) {
-        setIsLoggedIn(true);
-        fetchCartCount(session.user.id);
-      } else if (event === 'SIGNED_OUT' || !session) {
-        setIsLoggedIn(false);
-        setCartCount(0); 
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
-
-  useEffect(() => {
-    setIsLoggedIn(initialUserLoggedIn);
-  }, [initialUserLoggedIn]);
-
-  const handleLinkClick = () => {
-    setIsMenuOpen(false);
-  };
+  const handleLinkClick = () => setIsMenuOpen(false);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -93,7 +44,7 @@ export function Header({ userLoggedIn: initialUserLoggedIn }: HeaderProps) {
           {/* Actions */}
           <div className="flex items-center gap-4">
 
-            {!isLoggedIn ? (
+            {!userLoggedIn ? (
               <>
                 <Link href="/login" onClick={handleLinkClick}>
                   <Button variant="ghost" className="text-sm font-medium hover:bg-muted/50 transition-colors">Entrar</Button>
@@ -105,7 +56,6 @@ export function Header({ userLoggedIn: initialUserLoggedIn }: HeaderProps) {
             ) : (
               <form action={async () => {
                   await signOut();
-                  setIsLoggedIn(false); 
               }}>
                 <Button variant="ghost" size="icon" className="group" type="submit">
                   <LogOut className="h-5 w-5 mr-2 text-foreground hover:text-red-500 transition-colors" />
@@ -117,9 +67,10 @@ export function Header({ userLoggedIn: initialUserLoggedIn }: HeaderProps) {
             <Link href="/carrinho">
               <Button variant="ghost" size="icon" className="relative group">
                 <ShoppingCart className="h-5 w-5 transition-transform group-hover:scale-110" />
-                {cartCount > 0 && (
+                {/* TRAVA DE SEGURANÇA: Só mostra se estiver logado E com itens */}
+                {userLoggedIn && serverCartCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-green-600 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center animate-pulse shadow-sm">
-                    {cartCount}
+                    {serverCartCount}
                   </span>
                 )}
               </Button>
@@ -138,7 +89,7 @@ export function Header({ userLoggedIn: initialUserLoggedIn }: HeaderProps) {
               <Link href="/" onClick={handleLinkClick} className="text-sm font-medium hover:text-primary transition-colors">Início</Link>
               <Link href="/#produtos" onClick={handleLinkClick} className="text-sm font-medium hover:text-primary transition-colors">Produtos</Link>
               
-              {!isLoggedIn && (
+              {!userLoggedIn && (
                 <>
                   <Link href="/login" onClick={handleLinkClick} className="text-sm font-medium hover:text-primary transition-colors">Entrar</Link>
                   <Link href="/cadastro" onClick={handleLinkClick} className="text-sm font-medium hover:text-primary transition-colors">Cadastrar</Link>
