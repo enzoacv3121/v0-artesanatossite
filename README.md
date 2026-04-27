@@ -38,3 +38,5 @@ Como executar
 1. `npm install`
 2. Configure as chaves do Supabase no `.env.local`
 3. `npm run dev`
+
+Link do projeto: https://artesanatos-vovo.vercel.app/
