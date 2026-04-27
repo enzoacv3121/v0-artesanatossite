@@ -18,7 +18,7 @@ export function ProductCard({ name, price, image, category }: ProductCardProps) 
 
   return (
     <Card
-      className="group overflow-hidden border-border hover:shadow-lg transition-all duration-300"
+      className="group overflow-hidden border-border hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -49,7 +49,7 @@ export function ProductCard({ name, price, image, category }: ProductCardProps) 
           <span className="text-2xl font-semibold text-primary" style={{ fontFamily: "var(--font-cormorant)" }}>
             {price}
           </span>
-          <Button size="sm" className="group">
+          <Button size="sm" className="group transition-all hover:opacity-90 active:scale-95">
             <ShoppingCart className="h-4 w-4 mr-2 group-hover:scale-110 transition-transform" />
             Adicionar
           </Button>

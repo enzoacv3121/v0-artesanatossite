@@ -131,10 +131,10 @@ export default async function CarrinhoPage() {
                   </div>
                 </div>
 
-                {/* MUDANÇA AQUI: Botão agora é um Link para a página de Checkout */}
+                {/* MUDANÇA AQUI: Adicionado group, active:scale, e transição na setinha */}
                 <Link href="/checkout" className="block w-full">
-                    <Button className="w-full h-12 text-sm uppercase tracking-widest font-bold bg-black text-white hover:bg-gray-800 transition-colors">
-                    Finalizar Compra <ArrowRight className="ml-2 h-4 w-4" />
+                    <Button className="group w-full h-12 text-sm uppercase tracking-widest font-bold bg-black text-white hover:bg-gray-800 transition-all active:scale-[0.98]">
+                    Finalizar Compra <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Button>
                 </Link>
                 

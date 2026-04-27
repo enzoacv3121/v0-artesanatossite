@@ -5,7 +5,7 @@ import { Facebook, Instagram, Twitter, Phone, Mail, MapPin } from "lucide-react"
 
 export function Footer() {
   return (
-    <footer className="bg-white border-t border-gray-100 pt-16 pb-10 font-sans text-gray-600">
+    <footer className="bg-stone-50 border-t border-stone-200 pt-16 pb-10 font-sans text-gray-600">
       <div className="container mx-auto px-4 lg:px-8">
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
@@ -20,9 +20,9 @@ export function Footer() {
               Peças únicas feitas à mão com amor e dedicação há mais de 40 anos.
             </p>
             <div className="flex gap-4 pt-2">
-              <Instagram size={18} className="cursor-pointer hover:text-black" />
-              <Facebook size={18} className="cursor-pointer hover:text-black" />
-              <Twitter size={18} className="cursor-pointer hover:text-black" />
+              <Instagram size={18} className="cursor-pointer hover:text-black transition-colors" />
+              <Facebook size={18} className="cursor-pointer hover:text-black transition-colors" />
+              <Twitter size={18} className="cursor-pointer hover:text-black transition-colors" />
             </div>
           </div>
 
@@ -55,8 +55,8 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-100 pt-8 text-center">
-          <p className="text-xs text-gray-400">© 2025 Artesanatos da Vovó Valdeci.</p>
+        <div className="border-t border-stone-200 pt-8 text-center">
+          <p className="text-xs text-gray-400">© 2026 Artesanatos da Vovó Valdeci.</p>
         </div>
       </div>
     </footer>

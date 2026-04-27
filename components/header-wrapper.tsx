@@ -1,9 +1,9 @@
 // components/header-wrapper.tsx
 
-import { getUserSession } from '@/lib/auth';
+import { getUserSession } from '@/lib/auth'; 
 import { Header } from './header';
 
-// ESTE É UM SERVER COMPONENT
+// ESTE É UM SERVER COMPONENT que lê o cookie de sessão de forma segura.
 export async function HeaderWrapper() {
     
     // 1. Obtém o status do usuário no servidor
@@ -13,8 +13,5 @@ export async function HeaderWrapper() {
     const userLoggedIn = !!user; 
     
     // 3. Renderiza o Client Component, passando o status via props
-    // SINTAXE LIMPA PARA EVITAR ERROS
-    return (
-        <Header userLoggedIn={userLoggedIn} />
-    );
+    return <Header userLoggedIn={userLoggedIn} />;
 }

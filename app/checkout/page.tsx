@@ -119,7 +119,8 @@ export default async function CheckoutPage() {
                     </div>
                   </div>
 
-                  <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 h-12 text-lg font-bold uppercase tracking-wider">
+                  {/* MUDANÇA AQUI: Adicionado transition, hover:scale, shadow e active:scale */}
+                  <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 h-12 text-lg font-bold uppercase tracking-wider transition-all hover:shadow-lg hover:scale-[1.02] active:scale-95">
                     Pagar R$ {total.toFixed(2)}
                   </Button>
                   
