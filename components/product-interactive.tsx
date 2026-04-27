@@ -1,5 +1,5 @@
 // components/product-interactive.tsx
-"use client"; // Componente de Cliente para interatividade
+"use client";
 
 import { useState } from "react";
 import { Minus, Plus, Truck, ShoppingBag } from "lucide-react";
@@ -21,12 +21,11 @@ export function ProductInteractive({ produtoId, estoque }: ProductInteractivePro
 
   const handleSimulateShipping = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (cep.length < 8) return; // Validação simples
+    if (cep.length < 8) return;
 
     setLoadingCep(true);
     setShippingResult(null);
 
-    // Simula um delay de rede de 1 segundo
     setTimeout(() => {
       setLoadingCep(false);
       setShippingResult("Sedex: R$ 18,90 (2 dias úteis) | PAC: Grátis (5 dias)");
@@ -35,81 +34,80 @@ export function ProductInteractive({ produtoId, estoque }: ProductInteractivePro
 
   return (
     <div className="space-y-6">
-      {/* Formulário de Adicionar ao Carrinho */}
       <form action={addItemToCart} className="space-y-6">
         <input type="hidden" name="produtoId" value={produtoId} />
-        {/* Input invisível para enviar a quantidade correta ao servidor */}
         <input type="hidden" name="quantity" value={quantity} />
 
         <div className="flex gap-4">
-          {/* Seletor de Quantidade Funcional */}
-          <div className="flex items-center border border-gray-300 w-32 h-12">
+          {/* MUDANÇA: rounded-xl, border-stone-200 */}
+          <div className="flex items-center border border-stone-200 rounded-xl overflow-hidden h-14 bg-white">
             <button
               type="button"
               onClick={decrement}
-              className="w-10 h-full flex items-center justify-center hover:bg-gray-50 text-gray-600 disabled:opacity-50"
+              className="w-12 h-full flex items-center justify-center hover:bg-stone-50 text-stone-600 disabled:opacity-50 transition-colors"
             >
               <Minus size={16} />
             </button>
-            <div className="w-full h-full flex items-center justify-center text-sm font-medium border-l border-r border-gray-100">
+            <div className="w-full h-full flex items-center justify-center text-sm font-medium border-l border-r border-stone-100">
               {quantity}
             </div>
             <button
               type="button"
               onClick={increment}
-              className="w-10 h-full flex items-center justify-center hover:bg-gray-50 text-gray-600 disabled:opacity-50"
+              className="w-12 h-full flex items-center justify-center hover:bg-stone-50 text-stone-600 disabled:opacity-50 transition-colors"
             >
               <Plus size={16} />
             </button>
           </div>
 
-          {/* Botão COMPRAR */}
+          {/* MUDANÇA: rounded-xl, hover:shadow-lg, active:scale-95 */}
           <button
             type="submit"
-            className="flex-1 bg-black text-white h-12 text-sm font-bold tracking-widest hover:bg-gray-800 transition-colors uppercase flex items-center justify-center gap-2"
+            className="flex-1 bg-black text-white h-14 rounded-xl text-sm font-bold tracking-widest hover:bg-gray-800 hover:shadow-lg active:scale-95 transition-all uppercase flex items-center justify-center gap-2"
           >
             <ShoppingBag size={18} />
             Comprar
           </button>
         </div>
 
-        <p className="text-xs text-green-600 flex items-center gap-1">
-          <span className="w-2 h-2 rounded-full bg-green-600 inline-block"></span>
+        <p className="text-xs text-green-600 flex items-center gap-1.5 font-medium">
+          <span className="w-2 h-2 rounded-full bg-green-500 inline-block animate-pulse"></span>
           Em estoque - Envio imediato
         </p>
       </form>
 
-      {/* Calculadora de Frete (Simulada) */}
-      <div className="bg-gray-50 p-4 rounded-sm mt-6 border border-gray-100">
-        <p className="text-xs font-bold uppercase text-gray-600 mb-2 flex items-center gap-2">
+      {/* MUDANÇA: bg-stone-50, border-stone-100, rounded-2xl */}
+      <div className="bg-stone-50 p-5 rounded-2xl mt-6 border border-stone-100">
+        <p className="text-xs font-bold uppercase text-stone-600 mb-3 flex items-center gap-2">
           <Truck size={16} /> Meios de Envio
         </p>
         <div className="flex gap-2">
+          {/* MUDANÇA: rounded-lg */}
           <input
             type="text"
             placeholder="00000-000"
             maxLength={9}
             value={cep}
             onChange={(e) => setCep(e.target.value)}
-            className="flex-1 border border-gray-300 p-2 text-sm outline-none focus:border-black bg-white"
+            className="flex-1 border border-stone-200 rounded-lg p-3 text-sm outline-none focus:border-black focus:ring-1 focus:ring-black bg-white transition-all"
           />
+          {/* MUDANÇA: rounded-lg, active:scale-95 */}
           <button
             type="button"
             onClick={handleSimulateShipping}
-            className="bg-black text-white px-4 py-2 text-xs font-bold uppercase min-w-[80px]"
+            className="bg-black text-white px-5 py-3 rounded-lg text-xs font-bold uppercase hover:bg-gray-800 active:scale-95 transition-all min-w-[90px]"
           >
             {loadingCep ? "..." : "Calcular"}
           </button>
         </div>
         
-        {/* Resultado da Simulação */}
         {shippingResult && (
-          <div className="mt-3 text-xs text-gray-800 font-medium border-t border-gray-200 pt-2 animate-in fade-in slide-in-from-top-1">
+          <div className="mt-4 text-xs text-stone-800 font-medium border-t border-stone-200 pt-3 animate-in fade-in slide-in-from-top-1">
             {shippingResult}
           </div>
         )}
         
-        <a href="#" className="text-xs text-gray-400 underline mt-2 inline-block hover:text-gray-600">
+        <a href="#" className="text-xs text-stone-400 underline mt-3 inline-block hover:text-stone-600 transition-colors">
           Não sei meu CEP
         </a>
       </div>
