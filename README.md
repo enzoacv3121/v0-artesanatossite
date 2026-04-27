@@ -5,7 +5,7 @@ Projeto desenvolvido como Tarefa Pré-Avaliação para a disciplina de Projeto I
 Desenvolvedor
 Enzo Almeida Cortes Villar - Full Stack Developer
 
-📝 Resumo do Projeto
+Resumo do Projeto
 O Artesanatos da Vovó é uma solução de e-commerce focada no mercado de nicho de artesanato de luxo. A aplicação permite a navegação por categorias, visualização detalhada de produtos e um sistema de carrinho de compras persistente integrado ao banco de dados.
 
 Dimensão Técnica (Tecnologias)
