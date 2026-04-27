@@ -6,16 +6,13 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 
 export async function addItemToCart(formData: FormData) {
-    // 1. CORREÇÃO CRÍTICA: Adicionado 'await' no createClient
     const supabase = await createClient(); 
     
     const produtoId = formData.get('produtoId') as string;
-    // Se não vier quantidade (página home), usa 1
     const quantidade = parseInt(formData.get('quantity') as string) || 1;
 
     console.log("🛒 Tentando adicionar item:", produtoId, "Qtd:", quantidade);
 
-    // 2. Verifica Usuário
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
@@ -23,7 +20,6 @@ export async function addItemToCart(formData: FormData) {
         redirect('/login');
     }
 
-    // 3. Insere no Banco
     const { error } = await supabase
         .from('carrinho') 
         .insert([
@@ -41,8 +37,9 @@ export async function addItemToCart(formData: FormData) {
     
     console.log("✅ Item adicionado com sucesso!");
 
-    // 4. Atualiza o cache e redireciona para o carrinho para você ver que funcionou
-    revalidatePath('/carrinho'); 
+    // MUDANÇA AQUI: Mantemos o revalidatePath para atualizar o cache do Next.js,
+    // mas apagamos a linha "redirect('/carrinho');" para não tirar o usuário da tela.
     revalidatePath('/');
-    redirect('/carrinho'); 
+    revalidatePath('/carrinho'); 
+    revalidatePath(`/produto/${produtoId}`);
 }

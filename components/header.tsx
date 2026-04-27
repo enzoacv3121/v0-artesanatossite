@@ -13,29 +13,42 @@ interface HeaderProps {
 
 export function Header({ userLoggedIn: initialUserLoggedIn }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
-  // Estado local para controlar o login visualmente
   const [isLoggedIn, setIsLoggedIn] = useState(initialUserLoggedIn);
+  const [cartCount, setCartCount] = useState(0);
 
-  // EFEITO MÁGICO: Verifica no navegador se o usuário está logado
   useEffect(() => {
     const supabase = createClient();
     
-    // 1. Verifica a sessão atual imediatamente
+    const fetchCartCount = async (userId: string) => {
+      const { data, error } = await supabase
+        .from('carrinho')
+        .select('quantidade')
+        .eq('usuario_id', userId);
+
+      if (!error && data) {
+        const total = data.reduce((acc, item) => acc + item.quantidade, 0);
+        setCartCount(total);
+      }
+    };
+
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
+      // MUDANÇA: Verificação segura do TypeScript
+      if (session?.user) {
         setIsLoggedIn(true);
+        fetchCartCount(session.user.id);
       }
     };
     checkSession();
 
-    // 2. Escuta mudanças (login/logout) em tempo real
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' || session) {
+      // MUDANÇA: Verificação segura do TypeScript
+      if (session?.user) {
         setIsLoggedIn(true);
-      } else if (event === 'SIGNED_OUT') {
+        fetchCartCount(session.user.id);
+      } else if (event === 'SIGNED_OUT' || !session) {
         setIsLoggedIn(false);
+        setCartCount(0); 
       }
     });
 
@@ -44,7 +57,6 @@ export function Header({ userLoggedIn: initialUserLoggedIn }: HeaderProps) {
     };
   }, []);
 
-  // Atualiza o estado se a prop do servidor mudar (sincronia)
   useEffect(() => {
     setIsLoggedIn(initialUserLoggedIn);
   }, [initialUserLoggedIn]);
@@ -59,8 +71,8 @@ export function Header({ userLoggedIn: initialUserLoggedIn }: HeaderProps) {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-primary rounded-sm flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-xl">A</span>
+            <div className="w-10 h-10 bg-black rounded-sm flex items-center justify-center">
+              <span className="text-white font-bold text-xl">A</span>
             </div>
             <span
               className="font-serif text-xl font-semibold tracking-tight text-foreground"
@@ -72,44 +84,44 @@ export function Header({ userLoggedIn: initialUserLoggedIn }: HeaderProps) {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <Link href="/" className="text-sm font-medium hover:text-primary transition-colors">Início</Link>
-            <Link href="/#produtos" className="text-sm font-medium hover:text-primary transition-colors">Produtos</Link>
-            <Link href="/#sobre" className="text-sm font-medium hover:text-primary transition-colors">Sobre</Link>
-            <Link href="/#contato" className="text-sm font-medium hover:text-primary transition-colors">Contato</Link>
+            <Link href="/" className="text-sm font-medium hover:text-black/70 transition-colors">Início</Link>
+            <Link href="/#produtos" className="text-sm font-medium hover:text-black/70 transition-colors">Produtos</Link>
+            <Link href="/#sobre" className="text-sm font-medium hover:text-black/70 transition-colors">Sobre</Link>
+            <Link href="/#contato" className="text-sm font-medium hover:text-black/70 transition-colors">Contato</Link>
           </nav>
 
           {/* Actions */}
           <div className="flex items-center gap-4">
 
-            {/* LÓGICA VISUAL ATUALIZADA */}
             {!isLoggedIn ? (
               <>
                 <Link href="/login" onClick={handleLinkClick}>
                   <Button variant="ghost" className="text-sm font-medium hover:bg-muted/50 transition-colors">Entrar</Button>
                 </Link>
                 <Link href="/cadastro" onClick={handleLinkClick}>
-                  <Button variant="default" className="text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors">Cadastrar</Button>
+                  <Button variant="default" className="text-sm font-medium bg-black text-white hover:bg-black/90 transition-colors">Cadastrar</Button>
                 </Link>
               </>
             ) : (
               <form action={async () => {
                   await signOut();
-                  setIsLoggedIn(false); // Força atualização visual imediata ao sair
+                  setIsLoggedIn(false); 
               }}>
                 <Button variant="ghost" size="icon" className="group" type="submit">
-                  <LogOut className="h-5 w-5 mr-2 text-foreground" />
+                  <LogOut className="h-5 w-5 mr-2 text-foreground hover:text-red-500 transition-colors" />
                   <span className="sr-only">Sair</span>
                 </Button>
               </form>
             )}
 
-            {/* --- ALTERAÇÃO AQUI: Link para o Carrinho --- */}
             <Link href="/carrinho">
-              <Button variant="ghost" size="icon" className="relative">
-                <ShoppingCart className="h-5 w-5" />
-                {/* Se quiser ativar o contador depois, descomente:
-                  <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span> 
-                */}
+              <Button variant="ghost" size="icon" className="relative group">
+                <ShoppingCart className="h-5 w-5 transition-transform group-hover:scale-110" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-green-600 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center animate-pulse shadow-sm">
+                    {cartCount}
+                  </span>
+                )}
               </Button>
             </Link>
 
