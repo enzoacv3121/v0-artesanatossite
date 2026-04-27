@@ -57,53 +57,61 @@ export default async function CarrinhoPage() {
   }, 0) || 0;
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 font-sans">
+    <div className="min-h-screen flex flex-col bg-gray-50/50 font-sans">
       <HeaderWrapper />
 
-      <main className="flex-grow container mx-auto px-4 py-12">
-        <h1 className="text-3xl font-bold mb-8 flex items-center gap-2 text-gray-900">
-          <ShoppingBag /> Seu Carrinho
+      <main className="flex-grow container mx-auto px-4 py-16">
+        <h1 className="text-4xl font-bold mb-10 flex items-center gap-3 text-gray-950 tracking-tighter">
+          <ShoppingBag className="h-8 w-8 text-primary" /> Seu Carrinho
         </h1>
 
         {(!itens || itens.length === 0) ? (
-          <div className="text-center py-20 bg-white rounded-lg shadow-sm border border-gray-100">
-            <p className="text-gray-500 mb-6 text-lg">Seu carrinho está vazio.</p>
+          <div className="text-center py-24 bg-white rounded-3xl shadow-sm border border-stone-100/70">
+            <ShoppingBag className="h-16 w-16 text-stone-300 mx-auto mb-6" strokeWidth={1} />
+            <p className="text-stone-500 mb-8 text-xl font-medium">Seu carrinho está vazio.</p>
             <Link href="/">
-              <Button className="bg-black text-white hover:bg-gray-800">Ver Produtos</Button>
+              <Button className="bg-black text-white hover:bg-gray-800 h-12 px-8 text-sm uppercase tracking-widest font-bold active:scale-95 transition-all">Ver Produtos</Button>
             </Link>
           </div>
         ) : (
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-3 gap-10">
             
             {/* Lista de Itens */}
-            <div className="lg:col-span-2 space-y-4">
+            <div className="lg:col-span-2 space-y-6">
               {itens.map((item: any) => (
                 item.produtos && (
-                    <div key={item.id_carrinho} className="bg-white p-4 rounded-lg shadow-sm flex gap-4 items-center border border-gray-100">
+                    /* MUDANÇA: group, p-5, rounded-2xl, hover:shadow-lg, hover:-translate-y-1, transition-all */
+                    <div key={item.id_carrinho} className="group bg-white p-5 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex gap-6 items-center border border-stone-100/50">
+                    
                     {/* Imagem */}
-                    <div className="h-24 w-24 relative bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
+                    {/* MUDANÇA: h-28 w-28, rounded-xl, bg-stone-50 */}
+                    <div className="h-28 w-28 relative bg-stone-50 rounded-xl overflow-hidden flex-shrink-0 shadow-inner">
                         <img 
                         src={item.produtos.imagem_url || '/placeholder.jpg'} 
                         alt={item.produtos.nome} 
-                        className="object-cover w-full h-full"
+                        className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
                         />
                     </div>
 
                     {/* Detalhes */}
-                    <div className="flex-grow">
-                        <h3 className="font-bold text-lg text-gray-900">{item.produtos.nome}</h3>
-                        <p className="text-sm text-gray-500">{item.produtos.categoria}</p>
-                        <div className="flex items-center gap-4 mt-2">
-                            <span className="text-sm bg-gray-100 px-3 py-1 rounded font-medium text-gray-700">Qtd: {item.quantidade}</span>
-                            <span className="font-bold text-black">R$ {(item.produtos.preco * item.quantidade).toFixed(2)}</span>
+                    <div className="flex-grow space-y-1">
+                        {/* MUDANÇA: text-lg font-medium (menos agressivo que font-bold) */}
+                        <h3 className="text-lg font-medium text-gray-950 tracking-tight">{item.produtos.nome}</h3>
+                        <p className="text-sm text-stone-500">{item.produtos.categoria}</p>
+                        <div className="flex items-end justify-between pt-2">
+                            {/* MUDANÇA: bg-stone-100, font-medium, rounded-md */}
+                            <span className="text-sm bg-stone-100 px-3 py-1.5 rounded-md font-medium text-stone-700">Qtd: {item.quantidade}</span>
+                            {/* MUDANÇA: text-xl (ligeiramente maior e mais imponente), tracking-tighter */}
+                            <span className="text-xl font-semibold text-black tracking-tighter">R$ {(item.produtos.preco * item.quantidade).toFixed(2)}</span>
                         </div>
                     </div>
 
                     {/* Botão Remover */}
-                    <form action={removeItem}>
+                    <form action={removeItem} className="flex-shrink-0 self-start">
                         <input type="hidden" name="id" value={item.id_carrinho} />
-                        <button type="submit" className="text-gray-400 hover:text-red-600 p-2 transition-colors">
-                        <Trash2 size={20} />
+                        {/* MUDANÇA: p-3, rounded-full, hover:bg-red-50, opacity-0 group-hover:opacity-100 (Efeito de revelar) */}
+                        <button type="submit" className="opacity-0 group-hover:opacity-100 text-stone-300 hover:text-red-600 hover:bg-red-50 p-3 rounded-full transition-all duration-300">
+                        <Trash2 size={20} strokeWidth={1.5} />
                         </button>
                     </form>
                     </div>
@@ -113,33 +121,32 @@ export default async function CarrinhoPage() {
 
             {/* Resumo do Pedido */}
             <div className="lg:col-span-1">
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 sticky top-24">
-                <h2 className="text-xl font-bold mb-6 border-b border-gray-100 pb-4 text-gray-900">Resumo</h2>
+              <div className="bg-white p-8 rounded-3xl shadow-sm border border-stone-100/70 sticky top-24 space-y-8">
+                <h2 className="text-2xl font-bold text-gray-950 tracking-tight pb-4 border-b border-stone-100">Resumo</h2>
                 
-                <div className="space-y-3 text-sm mb-6">
-                  <div className="flex justify-between text-gray-600">
-                    <span>Subtotal</span>
-                    <span>R$ {total.toFixed(2)}</span>
+                <div className="space-y-4 text-sm">
+                  <div className="flex justify-between text-stone-600">
+                    <span>Subtotal ({itens.length} {itens.length === 1 ? 'item' : 'itens'})</span>
+                    <span className="font-medium text-gray-900">R$ {total.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between text-gray-600">
-                    <span>Frete</span>
-                    <span className="text-green-600 font-medium">Grátis</span>
+                  <div className="flex justify-between text-stone-600">
+                    <span>Estimativa de Frete</span>
+                    <span className="text-green-600 font-semibold bg-green-50 px-2 py-0.5 rounded text-xs">Grátis</span>
                   </div>
-                  <div className="flex justify-between font-bold text-xl pt-4 border-t border-gray-100 text-black">
+                  <div className="flex justify-between font-bold text-2xl pt-6 border-t border-stone-100 text-black tracking-tighter">
                     <span>Total</span>
                     <span>R$ {total.toFixed(2)}</span>
                   </div>
                 </div>
 
-                {/* MUDANÇA AQUI: Adicionado group, active:scale, e transição na setinha */}
                 <Link href="/checkout" className="block w-full">
-                    <Button className="group w-full h-12 text-sm uppercase tracking-widest font-bold bg-black text-white hover:bg-gray-800 transition-all active:scale-[0.98]">
-                    Finalizar Compra <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    <Button className="group w-full h-14 text-sm uppercase tracking-widest font-bold bg-black text-white hover:bg-gray-800 transition-all active:scale-[0.98] rounded-full shadow-md hover:shadow-lg">
+                    Finalizar Compra <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1.5" />
                     </Button>
                 </Link>
                 
-                <p className="text-xs text-gray-400 text-center mt-4 flex justify-center items-center gap-1">
-                  <CheckCircle size={12} /> Compra 100% Segura e Garantida
+                <p className="text-xs text-gray-400 text-center flex justify-center items-center gap-1.5 pt-2">
+                  <CheckCircle size={14} className="text-green-500" /> Compra 100% Segura e Garantida
                 </p>
               </div>
             </div>
