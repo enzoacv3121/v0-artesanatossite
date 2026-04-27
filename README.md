@@ -1,30 +1,22 @@
-# artesanatossite
+Artesanatos da Vovó - E-commerce Premium
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+Projeto desenvolvido como Tarefa Pré-Avaliação para a disciplina de Projeto Integrador IV.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/enzoacv3121s-projects/v0-artesanatossite)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/XpyshIusadK)
+Desenvolvedor
+Enzo Almeida Cortes Villar - Full Stack Developer
 
-## Overview
+📝 Resumo do Projeto
+O Artesanatos da Vovó é uma solução de e-commerce focada no mercado de nicho de artesanato de luxo. A aplicação permite a navegação por categorias, visualização detalhada de produtos e um sistema de carrinho de compras persistente integrado ao banco de dados.
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+Dimensão Técnica (Tecnologias)
+- Framework: Next.js 14+ (App Router)
+- Estilização: Tailwind CSS (Foco em UI/UX Premium)
+- Banco de Dados & Auth: Supabase (PostgreSQL)
+- Ícones: Lucide React
+- Linguagem: TypeScript
 
-## Deployment
 
-Your project is live at:
-
-**[https://vercel.com/enzoacv3121s-projects/v0-artesanatossite](https://vercel.com/enzoacv3121s-projects/v0-artesanatossite)**
-
-## Build your app
-
-Continue building your app on:
-
-**[https://v0.app/chat/XpyshIusadK](https://v0.app/chat/XpyshIusadK)**
-
-## How It Works
-
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+Como executar
+1. `npm install`
+2. Configure as chaves do Supabase no `.env.local`
+3. `npm run dev`
